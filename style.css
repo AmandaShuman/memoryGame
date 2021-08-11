@@ -1,1 +1,7 @@
-
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    /*We have 10 pictures so we need a 4 x 5 grid for a total of 20 cards so each picture has a duplicate*/
+    height: 400px;
+    width: 500px;
+}
