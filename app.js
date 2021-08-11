@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
             img: 'images/handsHeart.png'
         },
         {
-            name: '2handsHeart',
-            img: 'images/2handsHeart.png'
+            name: 'handsHeart',
+            img: 'images/handsHeart.png'
         },
         {
             name: 'angryPenguin',
@@ -84,34 +84,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ]
 
+    //refresh game with cards in new places
+    cardArray.sort(() => 0.5 - Math.random())
+
     const grid = document.querySelector('.grid')
-    var cardsChosen = []
-    var cardsChosenId = []
+    const resultDisplay = document.querySelector('#result')
+    let cardsChosen = []
+    let cardsChosenId = []
+    let cardsWon = []
 
     //create your game board
     function createBoard() {
         for (let i = 0; i < cardArray.length; i++) {
-            var card = document.createElement('img')
+            const card = document.createElement('img')
             card.setAttribute('src', 'images/allCardBack.jpg')
             card.setAttribute('data-id', i)
-            //card.addEventListener('click', flipCard)
+            card.addEventListener('click', flipCard)
             grid.appendChild(card)
         }
     }
 
     //check for matches
     function checkForMatch() {
-        var cards = document.querySelectorAll('img')
-        
+        const cards = document.querySelectorAll('img')            //pick up all the images from createBoard
+        const optionOneId = cardsChosenId[0]                    //we have 2 values - can only pick 2/turn
+        const optionTwoId = cardsChosenId[1]
+        if (optionOneId == optionTwoId) {
+            alert("You've chosen the same card. Try again.")
+            cards[optionOneId].setAttribute('src', 'images/allCardBack.jpg')
+            cards[optionTwoId].setAttribute('src', 'images/allCardBack.jpg')
+        } else if (cardsChosen[0] === cardsChosen[1]) {                       //if same, change to white & remove from play
+            alert('You found a match! 👏😁')
+            cards[optionOneId].setAttribute('src', 'images/white.png')      
+            cards[optionTwoId].setAttribute('src', 'images/white.png')
+            cards[optionOneId].removeEventListener("click", flipCard);
+            cards[optionTwoId].removeEventListener("click", flipCard);
+            cardsWon.push(cardsChosen)                                     
+        } else {                                                //if cards different, want to reflip them
+            cards[optionOneId].setAttribute('src', 'images/allCardBack.jpg')
+            cards[optionTwoId].setAttribute('src', 'images/allCardBack.jpg')
+            alert('Sorry, try again. 🤷‍♀️😢')
+        }
+        cardsChosen = []
+        cardsChosenId = []
+        resultDisplay.textContent = cardsWon.length
+        if (cardsWon.length === cardArray.length/2) {
+            resultDisplay.textContent = "🎉🎉🎉 Congrats! You've found all the matches! 🎉🎉🎉"
+        }
     }
 
     //flip your card
     function flipCard() {
-        var cardId = this.getAttribute('data-id')               //gets id from createBoard function
+        let cardId = this.getAttribute('data-id')               //gets id from createBoard function
         cardsChosen.push(cardArray[cardId].name)                //adds card name to array
         cardsChosenId.push(cardId)                              //adds card id to array
         this.setAttribute('src', cardArray[cardId].img)         //sets image to the image from the card id
-        if (cardsChosen === 2) {                                //want to invoke function check for match
+        if (cardsChosen.length === 2) {                                //want to invoke function check for match
             setTimeout(checkForMatch, 500)                      //times out after 500ms when match found
         }
     }
