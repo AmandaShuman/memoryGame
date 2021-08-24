@@ -12,3 +12,5 @@ Memory Game, also known as the Concentration card game or Matching Game, is a si
 - These cards then disspear
 - If the next card you flip does not match, a pop up alert notifies you of ths and the cards flip back
 - The game continues until you match all the cards on the board
+
+You can play the game here: https://amandashuman.github.io/memoryGame/
